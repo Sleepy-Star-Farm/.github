@@ -1,0 +1,24 @@
+name: Setup .NET SDK
+
+on:
+  workflow_call:
+    inputs:
+      NUGET_REGISTRY:
+        description: 'The URL for the NuGet Registry.'
+        default: 'https://api.nuget.org/v3/index.json'
+        type: string
+    secrets:
+      NUGET_AUTH:
+        description: 'The authentication token to configure.'
+        required: false
+
+jobs:
+  dotnet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setting up .NET SDK...
+        uses: actions/setup-dotnet
+        with:
+          source-url: ${{ inputs.NUGET_REGISTRY }}
+        env:
+          NUET_AUTH_TOKEN: ${{ secrets.NUGET_AUTH }}

@@ -1,0 +1,13 @@
+name: Testing Reusable Workflows
+
+on:
+  pull_request:
+    branches: [ dev ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Sleepy-Star-Farm/.github/.github/workflows/partials/checkout.yml@dev
+      - uses: Sleepy-Star-Farm/.github/.github/workflows/partials/dotnet.yml@dev
+      - uses: Sleepy-Star-Farm/.github/.github/workflows/partials/docker.yml@dev
