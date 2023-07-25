@@ -1,0 +1,36 @@
+name: 'Publish NuGet Package'
+author: 'Sleepy Star Farm'
+description: 'Build and Publish NuGet Package.'
+
+inputs:
+  REGISTRY:
+    description: 'The URL for a NuGet Resitry to use when setting up .NET.'
+    required: true
+    type: string
+  TOKEN:
+    description: 'The authentication token to use when connecting to the NuGet Registry.'
+    required: true
+    type: string
+  SOLUTION:
+    description: 'The *.sln file in the repository.'
+    required: true
+    type: string
+  PROJECT_DIRECTORY:
+    description: 'The path to the project directory containing the .csproj file.'
+    required: true
+    type: string
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: Sleepy-Star-Farm/.github/actions/dotnet/test@dev
+      with:
+        REGISTRY: ${{ inputs.REGISTRY }}
+        TOKEN: ${{ inputs.TOKEN }}
+        SOLUTION: ${{ inputs.SOLUTION }}
+    - name: Pack NuGet Package...
+      run: dotnet pack --configuration Release ${{ inputs.PROJECT_DIRECTORY }}/*.csproj
+      shell: bash
+    - name: Publish NuGet Package...
+      run: dotnet nuget push ${{ inputs.PROJECT_DIRECTORY }}/bin/Release/*.nupkg --api-key ${{ inputs.TOKEN }} --source ${{ inputs.REGISTRY }} --skip-duplicate
+      shell: bash

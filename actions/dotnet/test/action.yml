@@ -1,0 +1,29 @@
+name: 'Run .NET Tests'
+author: 'Sleepy Star Farm'
+description: 'Build and Test .NET Solution'
+
+inputs:
+  REGISTRY:
+    description: 'The URL for a NuGet Resitry to use when setting up .NET.'
+    required: true
+    type: string
+  TOKEN:
+    description: 'The authentication token to use when connecting to the NuGet Registry.'
+    required: true
+    type: string
+  SOLUTION:
+    description: 'The *.sln file in the repository.'
+    required: true
+    type: string
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: Sleepy-Star-Farm/.github/actions/dotnet/build@dev
+      with:
+        REGISTRY: ${{ inputs.REGISTRY }}
+        TOKEN: ${{ inputs.TOKEN }}
+        SOLUTION: ${{ inputs.SOLUTION }}
+    - name: Run .NET Tests
+      run: dotnet test --no-restore --verbosity normal ${{ inputs.SOLUTION }}
+      shell: bash

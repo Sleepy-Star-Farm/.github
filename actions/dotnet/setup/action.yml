@@ -1,0 +1,24 @@
+name: 'Setup .NET Enviroment'
+author: 'Sleepy Star Farm'
+description: 'Custom .NET Setup Workflow'
+
+inputs:
+  REGISTRY:
+    description: 'The URL for a NuGet Resitry to use when setting up .NET.'
+    required: true
+    type: string
+  TOKEN:
+    description: 'The authentication token to use when connecting to the NuGet Registry.'
+    required: true
+    type: string
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: Sleepy-Star-Farm/.github/actions/checkout@dev
+    - name: Set up .NET Environment...
+      uses: actions/setup-dotnet@v3
+      with:
+        source-url: ${{ inputs.REGISTRY }}
+      env:
+        NUGET_AUTH_TOKEN: ${{ inputs.TOKEN }}

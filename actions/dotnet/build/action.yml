@@ -1,0 +1,31 @@
+name: 'Build .NET Solution'
+author: 'Sleepy Star Farm'
+description: 'Custom .NET Build Solution Workflow.'
+
+inputs:
+  REGISTRY:
+    description: 'The URL for a NuGet Resitry to use when setting up .NET.'
+    required: true
+    type: string
+  TOKEN:
+    description: 'The authentication token to use when connecting to the NuGet Registry.'
+    required: true
+    type: string
+  SOLUTION:
+    description: 'The *.sln file in the repository.'
+    required: true
+    type: string
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: Sleepy-Star-Farm/.github/actions/dotnet/setup@dev
+      with:
+        REGISTRY: ${{ inputs.REGISTRY }}
+        TOKEN: ${{ inputs.TOKEN }}
+    - name: Restore Solution Dependencies...
+      run: dotnet restore ${{ inputs.SOLUTION }}
+      shell: bash
+    - name: Build Solution...
+      run: dotnet build --configuration Release --no-restore ${{ inputs.SOLUTION }}
+      shell: bash
