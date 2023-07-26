@@ -1,0 +1,10 @@
+name: 'Setup Docker'
+author: 'Sleepy Star Farm'
+description: 'Custom Docker Setup Workflow'
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: Sleepy-Star-Farm/.github/actions/checkout@dev
+    - name: Set up Docker Environment...
+      uses: docker/setup-buildx-action@v2

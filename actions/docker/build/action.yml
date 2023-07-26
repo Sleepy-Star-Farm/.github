@@ -1,0 +1,46 @@
+name: 'Docker Build and Push Action'
+author: 'Sleepy Star Farm'
+description: 'Custom Build Docker Image'
+
+inputs:
+  REGISTRY:
+    description: 'Server address of Docker registry. If not set then will default to Docker Hub'
+    required: true
+  USERNAME:
+    description: 'Username used to log against the Docker registry'
+    required: true
+  PASSWORD:
+    description: 'Password or personal access token used to log against the Docker registry'
+    required: true
+  PUSH:
+    description: 'Push is a shorthand for --output=type=registry'
+    required: false
+    default: 'false'
+  BUILD_ARGS:
+    description: 'List of build-time variables.'
+    required: false
+    default: ''
+  DOCKERFILE:
+    description: 'Path to the Dockerfile'
+    required: true
+  TAGS:
+    description: "List of tags"
+    required: false
+    default: 'ghcr.io/sleepy-star-farm/test:latest'
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: Sleepy-Star-Farm/.github/actions/docker/login@dev
+      with:
+        REGISTRY: ${{ inputs.REGISTRY }}
+        USERNAME: ${{ inputs.USERNAME }}
+        PASSWORD: ${{ inputs.PASSWORD }}
+    - name: Build Docker image...
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        push: ${{ inputs.PUSH }}
+        build-args: ${{ inputs.BUILD_ARGS }}
+        file: ${{ inputs.DOCKERFILE }}
+        tags: ${{ inputs.TAGS }}
